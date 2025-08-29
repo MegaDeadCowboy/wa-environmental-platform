@@ -1,0 +1,22 @@
+# API Requirements for Flask Backend
+# Save as: requirements.txt (or add to existing requirements.txt)
+
+# Flask web framework and extensions
+Flask==3.0.0
+Flask-RESTful==0.3.10
+Flask-CORS==4.0.0
+
+# Database and spatial libraries (already installed from previous phases)
+psycopg2-binary>=2.9.0
+SQLAlchemy>=2.0.0
+geopandas>=0.14.0
+pandas>=2.0.0
+numpy>=1.24.0
+shapely>=2.0.0
+requests>=2.31.0
+
+# Development and testing
+python-dotenv>=1.0.0
+
+# Optional: Production server
+gunicorn>=21.2.0
