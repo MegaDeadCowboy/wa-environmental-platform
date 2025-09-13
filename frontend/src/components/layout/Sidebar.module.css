@@ -1,0 +1,222 @@
+/* AGGRESSIVE Sidebar Fix - Professional Gray Theme */
+/* This uses !important everywhere to override any existing styles */
+
+.sidebar {
+  background: linear-gradient(180deg, #374151 0%, #1f2937 100%) !important;
+  border-right: 1px solid #4b5563 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transition: width 0.3s ease !important;
+  flex-shrink: 0 !important;
+  z-index: 5 !important;
+  overflow-y: auto !important;
+  height: 100% !important;
+  width: 320px !important;
+  min-width: 320px !important;
+  max-width: 320px !important;
+}
+
+.header {
+  padding: 1rem !important;
+  border-bottom: 1px solid #4b5563 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  min-height: 64px !important;
+  background: rgba(0, 0, 0, 0.2) !important;
+}
+
+.title {
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+  color: #f9fafb !important;
+  margin: 0 !important;
+}
+
+.toggleButton {
+  padding: 0.5rem !important;
+  background: rgba(75, 85, 99, 0.4) !important;
+  border: 1px solid rgba(107, 114, 128, 0.6) !important;
+  border-radius: 0.375rem !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #f9fafb !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.toggleButton:hover {
+  background: rgba(107, 114, 128, 0.6) !important;
+  border-color: #6b7280 !important;
+}
+
+.content {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #6b7280 #1f2937 !important;
+  padding: 1rem !important;
+  background: transparent !important;
+}
+
+.content::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+.content::-webkit-scrollbar-track {
+  background: #1f2937 !important;
+  border-radius: 4px !important;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: #6b7280 !important;
+  border-radius: 4px !important;
+  border: 1px solid #9ca3af !important;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af !important;
+}
+
+/* AGGRESSIVE OVERRIDES for all sidebar content */
+.sidebar,
+.sidebar *,
+.sidebar div,
+.sidebar section,
+.sidebar article {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Force the main sidebar background only */
+.sidebar {
+  background: linear-gradient(180deg, #374151 0%, #1f2937 100%) !important;
+}
+
+/* Override ALL text colors */
+.sidebar,
+.sidebar *,
+.sidebar h1,
+.sidebar h2,
+.sidebar h3,
+.sidebar h4,
+.sidebar h5,
+.sidebar h6,
+.sidebar p,
+.sidebar div,
+.sidebar span,
+.sidebar label {
+  color: #f9fafb !important;
+}
+
+/* Stats Cards - Nuclear override */
+.sidebar .statsCard,
+.sidebar [class*="stat"],
+.sidebar [class*="card"],
+.sidebar div[style*="brown"],
+.sidebar div[style*="#92400e"],
+.sidebar div[style*="#78350f"] {
+  background: linear-gradient(135deg, #4b5563 0%, #374151 100%) !important;
+  border: 1px solid #6b7280 !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+  margin-bottom: 12px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  color: #f9fafb !important;
+}
+
+/* Numbers and values */
+.sidebar .statsCard *,
+.sidebar [class*="stat"] *,
+.sidebar [class*="card"] * {
+  color: #f9fafb !important;
+  background: transparent !important;
+}
+
+/* Section headers */
+.sidebar h2,
+.sidebar h3,
+.sidebar .title,
+.sidebar [class*="title"],
+.sidebar [class*="header"] {
+  color: #f9fafb !important;
+  border-bottom-color: #4b5563 !important;
+}
+
+/* Risk levels and other colored sections */
+.sidebar [class*="risk"],
+.sidebar [class*="level"],
+.sidebar [class*="count"] {
+  background: rgba(75, 85, 99, 0.3) !important;
+  border-color: #6b7280 !important;
+  color: #f9fafb !important;
+}
+
+/* Input fields */
+.sidebar input,
+.sidebar select,
+.sidebar textarea {
+  background: #374151 !important;
+  border: 1px solid #6b7280 !important;
+  color: #f9fafb !important;
+}
+
+.sidebar input::placeholder,
+.sidebar select::placeholder,
+.sidebar textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Buttons */
+.sidebar button {
+  background: rgba(75, 85, 99, 0.4) !important;
+  border: 1px solid rgba(107, 114, 128, 0.6) !important;
+  color: #f9fafb !important;
+}
+
+.sidebar button:hover {
+  background: rgba(107, 114, 128, 0.6) !important;
+  border-color: #6b7280 !important;
+}
+
+/* Any remaining specific color overrides */
+.sidebar .good .count {
+  background: #10b981 !important;
+  color: white !important;
+}
+
+.sidebar .moderate .count {
+  background: #f59e0b !important;
+  color: white !important;
+}
+
+.sidebar .unhealthy .count {
+  background: #ef4444 !important;
+  color: white !important;
+}
+
+/* Final nuclear option - override specific inline styles */
+.sidebar [style*="background: white"] {
+  background: transparent !important;
+}
+
+.sidebar [style*="background-color: white"] {
+  background: transparent !important;
+}
+
+.sidebar [style*="background: #fff"] {
+  background: transparent !important;
+}
+
+.sidebar [style*="background-color: #fff"] {
+  background: transparent !important;
+}
+
+.sidebar [style*="color: #92400e"],
+.sidebar [style*="color: #78350f"],
+.sidebar [style*="color: #451a03"] {
+  color: #f9fafb !important;
+}

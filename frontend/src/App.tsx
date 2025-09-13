@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import AirQualityDashboard from './components/airquality/AirQualityDashboard';
 import WaterQualityDashboard from './components/waterquality/WaterQualityDashboard';
 import './App.css';
+import 'leaflet/dist/leaflet.css';
 
 type DashboardType = 'air-quality' | 'water-quality';
 
