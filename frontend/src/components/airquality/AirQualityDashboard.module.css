@@ -1,0 +1,35 @@
+/* Basic styles for the sections - you can expand these later */
+.statsSection {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.filtersSection {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.standardsSection {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.rankingsSection {
+  padding: 1rem;
+}
+
+.infoOverlay {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  max-width: 28rem;
+  z-index: 1000;
+}
+
+.infoPanel h3 {
+  margin: 0 0 1rem 0;
+}

@@ -1,4 +1,4 @@
-// src/components/EnvironmentalMap.tsx - Fixed Layout Version
+// src/components/EnvironmentalMap.tsx - Improved Version with Data Tables
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -8,40 +8,16 @@ import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png"
 import markerIconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png"
 
-// Simple inline SVG icons to avoid import issues
+// Simple inline SVG icons
 const Activity = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"></polyline>
   </svg>
 );
 
-const MapPin = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-    <circle cx="12" cy="10" r="3"></circle>
-  </svg>
-);
-
-const Layers = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <polygon points="12,2 2,7 12,12 22,7 12,2"></polygon>
-    <polyline points="2,17 12,22 22,17"></polyline>
-    <polyline points="2,12 12,17 22,12"></polyline>
-  </svg>
-);
-
-const TrendingUp = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"></polyline>
-    <polyline points="17,6 23,6 23,12"></polyline>
-  </svg>
-);
-
-const RefreshCw = ({ className }: { className?: string }) => (
+const ChevronDown = ({ className }: { className?: string }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
-    <polyline points="23,4 23,10 17,10"></polyline>
-    <polyline points="1,20 1,14 7,14"></polyline>
-    <path d="m20.49,9a9,9,0,0,0-17.49,3a9,9,0,0,0,17.49,3"></path>
+    <polyline points="6,9 12,15 18,9"></polyline>
   </svg>
 );
 
@@ -53,9 +29,11 @@ const Info = () => (
   </svg>
 );
 
-const Filter = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46 22,3"></polygon>
+const RefreshCw = ({ className }: { className?: string }) => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <polyline points="23,4 23,10 17,10"></polyline>
+    <polyline points="1,20 1,14 7,14"></polyline>
+    <path d="m20.49,9a9,9,0,0,0-17.49,3a9,9,0,0,0,17.49,3"></path>
   </svg>
 );
 
@@ -70,6 +48,77 @@ const DefaultIcon = L.icon({
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
+
+// Data conversion tables
+const AIR_QUALITY_STANDARDS = [
+  {
+    parameter: 'PM2.5 Mass',
+    ranges: [
+      { min: 0, max: 12, aqi: '0-50', level: 'Good', color: '#00e400', description: 'Air quality is satisfactory' },
+      { min: 12.1, max: 35.4, aqi: '51-100', level: 'Moderate', color: '#ffff00', description: 'Acceptable for most people' },
+      { min: 35.5, max: 55.4, aqi: '101-150', level: 'Unhealthy for Sensitive Groups', color: '#ff7e00', description: 'Sensitive groups may experience symptoms' },
+      { min: 55.5, max: 150.4, aqi: '151-200', level: 'Unhealthy', color: '#ff0000', description: 'Everyone may experience symptoms' },
+      { min: 150.5, max: 250.4, aqi: '201-300', level: 'Very Unhealthy', color: '#8f3f97', description: 'Health warnings of emergency conditions' },
+      { min: 250.5, max: 999, aqi: '301-500', level: 'Hazardous', color: '#7e0023', description: 'Emergency conditions - avoid outdoor activities' }
+    ],
+    unit: 'μg/m³',
+    fullName: 'Fine Particulate Matter (PM2.5)',
+    healthInfo: 'Particles so small they can get deep into lungs and bloodstream'
+  },
+  {
+    parameter: 'Ozone',
+    ranges: [
+      { min: 0, max: 54, aqi: '0-50', level: 'Good', color: '#00e400', description: 'Air quality is satisfactory' },
+      { min: 55, max: 70, aqi: '51-100', level: 'Moderate', color: '#ffff00', description: 'Acceptable for most people' },
+      { min: 71, max: 85, aqi: '101-150', level: 'Unhealthy for Sensitive Groups', color: '#ff7e00', description: 'Sensitive groups should limit outdoor exertion' },
+      { min: 86, max: 105, aqi: '151-200', level: 'Unhealthy', color: '#ff0000', description: 'Everyone should limit outdoor exertion' },
+      { min: 106, max: 200, aqi: '201-300', level: 'Very Unhealthy', color: '#8f3f97', description: 'Avoid outdoor activities' },
+      { min: 201, max: 999, aqi: '301-500', level: 'Hazardous', color: '#7e0023', description: 'Emergency conditions' }
+    ],
+    unit: 'ppb',
+    fullName: 'Ground-level Ozone (O₃)',
+    healthInfo: 'Can cause respiratory problems, especially during outdoor activities'
+  }
+];
+
+const WATER_QUALITY_STANDARDS = [
+  {
+    parameter: 'pH',
+    ranges: [
+      { min: 6.5, max: 8.5, level: 'Optimal', color: '#00e400', description: 'Safe for aquatic life and drinking' },
+      { min: 6.0, max: 6.4, level: 'Concerning', color: '#ffff00', description: 'Slightly acidic - monitor closely' },
+      { min: 8.6, max: 9.0, level: 'Concerning', color: '#ffff00', description: 'Slightly alkaline - monitor closely' },
+      { min: 0, max: 5.9, level: 'Critical', color: '#ff0000', description: 'Too acidic - harmful to aquatic life' },
+      { min: 9.1, max: 14, level: 'Critical', color: '#ff0000', description: 'Too alkaline - harmful to aquatic life' }
+    ],
+    unit: 'pH units',
+    fullName: 'pH (Acidity/Alkalinity)',
+    healthInfo: 'Measures how acidic or basic water is. 7 is neutral, below 7 is acidic, above 7 is basic'
+  },
+  {
+    parameter: 'Temperature, water',
+    ranges: [
+      { min: 0, max: 20, level: 'Good', color: '#00e400', description: 'Optimal for most aquatic life' },
+      { min: 20.1, max: 25, level: 'Elevated', color: '#ffff00', description: 'Warmer than ideal - stress for cold-water fish' },
+      { min: 25.1, max: 999, level: 'Critical', color: '#ff0000', description: 'Too warm - low oxygen, fish kills possible' }
+    ],
+    unit: '°C',
+    fullName: 'Water Temperature',
+    healthInfo: 'Cold water holds more oxygen. Warm water can stress aquatic ecosystems'
+  },
+  {
+    parameter: 'Dissolved oxygen',
+    ranges: [
+      { min: 8, max: 20, level: 'Excellent', color: '#00e400', description: 'Optimal for all aquatic life' },
+      { min: 5, max: 7.9, level: 'Good', color: '#90ee90', description: 'Adequate for most fish species' },
+      { min: 3, max: 4.9, level: 'Poor', color: '#ffff00', description: 'Stressful for fish - limited species survival' },
+      { min: 0, max: 2.9, level: 'Critical', color: '#ff0000', description: 'Fish kills likely - emergency conditions' }
+    ],
+    unit: 'mg/L',
+    fullName: 'Dissolved Oxygen (DO)',
+    healthInfo: 'Amount of oxygen available for fish and aquatic organisms to breathe'
+  }
+];
 
 // Types for our environmental data
 interface County {
@@ -95,7 +144,7 @@ interface Station {
   };
   geometry: {
     type: 'Point';
-    coordinates: [number, number]; // [longitude, latitude]
+    coordinates: [number, number];
   };
 }
 
@@ -140,6 +189,7 @@ const EnvironmentalMap: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [showCounties, setShowCounties] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
+  const [showAirQualityTable, setShowAirQualityTable] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -199,14 +249,6 @@ const EnvironmentalMap: React.FC = () => {
     return getRiskLevel(riskScore).color;
   };
 
-  // Get risk level text
-  const getRiskLevelText = (riskScore: number): string => {
-    if (riskScore >= 75) return 'Very High';
-    if (riskScore >= 50) return 'High';
-    if (riskScore >= 25) return 'Moderate';
-    return 'Low';
-  };
-
   // Filter stations based on selected filter
   const filteredStations = data.stations.filter(station => {
     if (selectedFilter === 'all') return true;
@@ -214,7 +256,15 @@ const EnvironmentalMap: React.FC = () => {
       const riskScore = getRiskScore(station.properties.station_id);
       return riskScore && riskScore.risk_score >= 50;
     }
+    if (selectedFilter === 'very-high-risk') {
+      const riskScore = getRiskScore(station.properties.station_id);
+      return riskScore && riskScore.risk_score >= 75;
+    }
     if (selectedFilter === 'active') return station.properties.active;
+    if (selectedFilter === 'good-air') {
+      const riskScore = getRiskScore(station.properties.station_id);
+      return riskScore && riskScore.risk_score < 25;
+    }
     return true;
   });
 
@@ -295,6 +345,29 @@ const EnvironmentalMap: React.FC = () => {
     : 0;
 
   const countyStats = getCountyStats();
+
+  // Get filter counts
+  const getFilterCounts = () => {
+    const counts = {
+      all: data.stations.length,
+      active: data.stations.filter(s => s.properties.active).length,
+      'good-air': data.stations.filter(s => {
+        const risk = getRiskScore(s.properties.station_id);
+        return risk && risk.risk_score < 25;
+      }).length,
+      'high-risk': data.stations.filter(s => {
+        const risk = getRiskScore(s.properties.station_id);
+        return risk && risk.risk_score >= 50;
+      }).length,
+      'very-high-risk': data.stations.filter(s => {
+        const risk = getRiskScore(s.properties.station_id);
+        return risk && risk.risk_score >= 75;
+      }).length
+    };
+    return counts;
+  };
+
+  const filterCounts = getFilterCounts();
 
   // Loading state
   if (loading) {
@@ -393,7 +466,7 @@ const EnvironmentalMap: React.FC = () => {
     );
   }
 
-  // Main application layout - FIXED LAYOUT ISSUES
+  // Main application layout
   return (
     <div style={{ 
       height: '100vh', 
@@ -401,20 +474,20 @@ const EnvironmentalMap: React.FC = () => {
       flexDirection: 'column', 
       backgroundColor: '#f9fafb',
       overflow: 'hidden',
-      width: '100vw'  // FIXED: Ensure full viewport width
+      width: '100vw'
     }}>
-      {/* Header - FIXED: Removed maxWidth restriction */}
+      {/* Header */}
       <header style={{
         backgroundColor: 'white',
         borderBottom: '1px solid #e5e7eb',
         boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
         flexShrink: 0,
         zIndex: 10,
-        width: '100%'  // FIXED: Explicit full width
+        width: '100%'
       }}>
         <div style={{
-          width: '100%',  // FIXED: Changed from maxWidth to full width
-          margin: '0',    // FIXED: Removed auto margins
+          width: '100%',
+          margin: '0',
           padding: '1rem',
           display: 'flex',
           alignItems: 'center',
@@ -432,12 +505,12 @@ const EnvironmentalMap: React.FC = () => {
               gap: '0.75rem',
               margin: 0,
               marginBottom: '0.25rem'
-            }} className="header-title">
+            }}>
               <Activity />
-              Washington State Environmental Risk Platform
+              Washington State Air Quality Monitoring
             </h1>
             <p style={{ color: '#4b5563', margin: 0, fontSize: '0.875rem' }}>
-              Real-time air quality monitoring and spatial risk analysis
+              Real-time air quality monitoring and health risk analysis - EPA data integration
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
@@ -484,17 +557,17 @@ const EnvironmentalMap: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content Area - FIXED: Added explicit width */}
+      {/* Main Content Area */}
       <div style={{ 
         display: 'flex', 
         flex: 1, 
         minHeight: 0, 
         overflow: 'hidden',
-        width: '100%'  // FIXED: Ensure full width
+        width: '100%'
       }}>
-        {/* Sidebar - FIXED: Reduced width from 320px to 260px */}
-        <div className="sidebar-container" style={{
-          width: sidebarCollapsed ? '60px' : '260px',  // FIXED: Reduced from 320px
+        {/* Sidebar */}
+        <div style={{
+          width: sidebarCollapsed ? '60px' : '260px',
           backgroundColor: 'white',
           borderRight: '1px solid #e5e7eb',
           boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
@@ -504,7 +577,7 @@ const EnvironmentalMap: React.FC = () => {
           flexShrink: 0,
           zIndex: 5,
           overflowY: 'auto',
-          maxWidth: '260px'  // FIXED: Ensure it doesn't exceed this width
+          maxWidth: '260px'
         }}>
           {/* Collapse Toggle */}
           <div style={{
@@ -517,7 +590,7 @@ const EnvironmentalMap: React.FC = () => {
           }}>
             {!sidebarCollapsed && (
               <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', margin: 0 }}>
-                Dashboard
+                Air Quality Dashboard
               </h2>
             )}
             <button
@@ -543,15 +616,15 @@ const EnvironmentalMap: React.FC = () => {
             <>
               {/* Stats Overview */}
               <div style={{ padding: '1.5rem', borderBottom: '1px solid #e5e7eb', flexShrink: 0 }}>
-                <div className="stats-grid" style={{
+                <div style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(2, 1fr)',
-                  gap: '0.75rem',  // FIXED: Reduced gap to fit smaller sidebar
+                  gap: '0.75rem',
                   marginBottom: '1rem'
                 }}>
                   <div style={{
                     backgroundColor: '#eff6ff',
-                    padding: '0.5rem',  // FIXED: Reduced padding
+                    padding: '0.5rem',
                     borderRadius: '0.5rem'
                   }}>
                     <div style={{
@@ -560,9 +633,9 @@ const EnvironmentalMap: React.FC = () => {
                       justifyContent: 'space-between',
                       marginBottom: '0.25rem'
                     }}>
-                      <MapPin />
+                      <Activity />
                       <span style={{
-                        fontSize: '1.25rem',  // FIXED: Slightly smaller
+                        fontSize: '1.25rem',
                         fontWeight: 'bold',
                         color: '#2563eb'
                       }}>
@@ -570,11 +643,11 @@ const EnvironmentalMap: React.FC = () => {
                       </span>
                     </div>
                     <p style={{
-                      fontSize: '0.75rem',  // FIXED: Smaller text
+                      fontSize: '0.75rem',
                       color: '#4b5563',
                       margin: 0
                     }}>
-                      Stations
+                      Air Stations
                     </p>
                   </div>
 
@@ -589,7 +662,11 @@ const EnvironmentalMap: React.FC = () => {
                       justifyContent: 'space-between',
                       marginBottom: '0.25rem'
                     }}>
-                      <Layers />
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polygon points="12,2 2,7 12,12 22,7 12,2"></polygon>
+                        <polyline points="2,17 12,22 22,17"></polyline>
+                        <polyline points="2,12 12,17 22,12"></polyline>
+                      </svg>
                       <span style={{
                         fontSize: '1.25rem',
                         fontWeight: 'bold',
@@ -618,7 +695,10 @@ const EnvironmentalMap: React.FC = () => {
                       justifyContent: 'space-between',
                       marginBottom: '0.25rem'
                     }}>
-                      <TrendingUp />
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"></polyline>
+                        <polyline points="17,6 23,6 23,12"></polyline>
+                      </svg>
                       <span style={{
                         fontSize: '1.25rem',
                         fontWeight: 'bold',
@@ -684,26 +764,129 @@ const EnvironmentalMap: React.FC = () => {
                 </div>
               </div>
 
-              {/* Filters */}
+              {/* Air Quality Standards Table */}
               <div style={{
-                padding: '1rem',  // FIXED: Reduced padding
+                padding: '1rem',
+                borderBottom: '1px solid #e5e7eb',
+                flexShrink: 0
+              }}>
+                <button
+                  onClick={() => setShowAirQualityTable(!showAirQualityTable)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    padding: '0.5rem',
+                    backgroundColor: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '0.375rem',
+                    cursor: 'pointer',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    color: '#1e293b'
+                  }}
+                >
+                  <span>📊 EPA Air Quality Standards</span>
+                  <ChevronDown className={showAirQualityTable ? 'rotate-180' : ''} />
+                </button>
+                
+                {showAirQualityTable && (
+                  <div style={{
+                    marginTop: '0.5rem',
+                    backgroundColor: '#f8fafc',
+                    borderRadius: '0.375rem',
+                    padding: '0.75rem',
+                    maxHeight: '300px',
+                    overflowY: 'auto'
+                  }}>
+                    {AIR_QUALITY_STANDARDS.map((standard, idx) => (
+                      <div key={idx} style={{ marginBottom: idx < AIR_QUALITY_STANDARDS.length - 1 ? '1rem' : '0' }}>
+                        <h4 style={{
+                          fontSize: '0.75rem',
+                          fontWeight: '600',
+                          color: '#1e293b',
+                          margin: '0 0 0.5rem 0'
+                        }}>
+                          {standard.fullName} ({standard.unit})
+                        </h4>
+                        <p style={{
+                          fontSize: '0.625rem',
+                          color: '#64748b',
+                          margin: '0 0 0.5rem 0',
+                          fontStyle: 'italic'
+                        }}>
+                          {standard.healthInfo}
+                        </p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                          {standard.ranges.map((range, rangeIdx) => (
+                            <div key={rangeIdx} style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                              fontSize: '0.625rem'
+                            }}>
+                              <div style={{
+                                width: '12px',
+                                height: '12px',
+                                backgroundColor: range.color,
+                                borderRadius: '2px',
+                                flexShrink: 0
+                              }} />
+                              <span style={{ minWidth: '60px', fontWeight: '500' }}>
+                                {range.min}-{range.max === 999 ? '500+' : range.max} {standard.unit}
+                              </span>
+                              <span style={{ color: '#64748b', fontSize: '0.5rem' }}>
+                                {range.level}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    <div style={{
+                      marginTop: '0.75rem',
+                      padding: '0.5rem',
+                      backgroundColor: '#e0f2fe',
+                      borderRadius: '0.25rem',
+                      fontSize: '0.625rem',
+                      color: '#0369a1'
+                    }}>
+                      <strong>How to read markers:</strong> Numbers on map markers show calculated health risk scores (0-100) based on these EPA standards. Colors indicate risk level.
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Filters - IMPROVED VISIBILITY */}
+              <div style={{
+                padding: '1rem',
                 borderBottom: '1px solid #e5e7eb',
                 flexShrink: 0
               }}>
                 <h3 style={{
                   fontSize: '0.875rem',
                   fontWeight: '500',
-                  color: '#111827',
-                  margin: '0 0 0.5rem 0',  // FIXED: Reduced margin
+                  color: '#111827',  // Changed from light gray to dark
+                  margin: '0 0 0.5rem 0',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem'
                 }}>
-                  <Filter />
-                  Filters
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46 22,3"></polygon>
+                  </svg>
+                  Station Filters
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                  <label style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    cursor: 'pointer',
+                    padding: '0.25rem',
+                    borderRadius: '0.25rem',
+                    backgroundColor: selectedFilter === 'all' ? '#f0f9ff' : 'transparent'
+                  }}>
                     <input
                       type="radio"
                       name="filter"
@@ -712,9 +895,49 @@ const EnvironmentalMap: React.FC = () => {
                       onChange={(e) => setSelectedFilter(e.target.value)}
                       style={{ marginRight: '0.5rem' }}
                     />
-                    <span style={{ fontSize: '0.75rem' }}>All Stations ({data.stations.length})</span>
+                    <span style={{ 
+                      fontSize: '0.75rem',
+                      color: '#1f2937',  // Changed to dark color for visibility
+                      fontWeight: selectedFilter === 'all' ? '500' : '400'
+                    }}>
+                      All Stations ({filterCounts.all})
+                    </span>
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                  <label style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    cursor: 'pointer',
+                    padding: '0.25rem',
+                    borderRadius: '0.25rem',
+                    backgroundColor: selectedFilter === 'good-air' ? '#f0fdf4' : 'transparent'
+                  }}>
+                    <input
+                      type="radio"
+                      name="filter"
+                      value="good-air"
+                      checked={selectedFilter === 'good-air'}
+                      onChange={(e) => setSelectedFilter(e.target.value)}
+                      style={{ marginRight: '0.5rem' }}
+                    />
+                    <span style={{ 
+                      fontSize: '0.75rem',
+                      color: '#1f2937',
+                      fontWeight: selectedFilter === 'good-air' ? '500' : '400',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.25rem'
+                    }}>
+                      🟢 Good Air Quality ({filterCounts['good-air']})
+                    </span>
+                  </label>
+                  <label style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    cursor: 'pointer',
+                    padding: '0.25rem',
+                    borderRadius: '0.25rem',
+                    backgroundColor: selectedFilter === 'high-risk' ? '#fef3c7' : 'transparent'
+                  }}>
                     <input
                       type="radio"
                       name="filter"
@@ -723,14 +946,52 @@ const EnvironmentalMap: React.FC = () => {
                       onChange={(e) => setSelectedFilter(e.target.value)}
                       style={{ marginRight: '0.5rem' }}
                     />
-                    <span style={{ fontSize: '0.75rem' }}>
-                      High Risk ({data.stations.filter(s => {
-                        const risk = getRiskScore(s.properties.station_id);
-                        return risk && risk.risk_score >= 50;
-                      }).length})
+                    <span style={{ 
+                      fontSize: '0.75rem',
+                      color: '#1f2937',
+                      fontWeight: selectedFilter === 'high-risk' ? '500' : '400',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.25rem'
+                    }}>
+                      🟡 High Risk Areas ({filterCounts['high-risk']})
                     </span>
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                  <label style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    cursor: 'pointer',
+                    padding: '0.25rem',
+                    borderRadius: '0.25rem',
+                    backgroundColor: selectedFilter === 'very-high-risk' ? '#fee2e2' : 'transparent'
+                  }}>
+                    <input
+                      type="radio"
+                      name="filter"
+                      value="very-high-risk"
+                      checked={selectedFilter === 'very-high-risk'}
+                      onChange={(e) => setSelectedFilter(e.target.value)}
+                      style={{ marginRight: '0.5rem' }}
+                    />
+                    <span style={{ 
+                      fontSize: '0.75rem',
+                      color: '#1f2937',
+                      fontWeight: selectedFilter === 'very-high-risk' ? '500' : '400',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.25rem'
+                    }}>
+                      🔴 Very High Risk ({filterCounts['very-high-risk']})
+                    </span>
+                  </label>
+                  <label style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    cursor: 'pointer',
+                    padding: '0.25rem',
+                    borderRadius: '0.25rem',
+                    backgroundColor: selectedFilter === 'active' ? '#f3f4f6' : 'transparent'
+                  }}>
                     <input
                       type="radio"
                       name="filter"
@@ -739,8 +1000,15 @@ const EnvironmentalMap: React.FC = () => {
                       onChange={(e) => setSelectedFilter(e.target.value)}
                       style={{ marginRight: '0.5rem' }}
                     />
-                    <span style={{ fontSize: '0.75rem' }}>
-                      Active ({data.stations.filter(s => s.properties.active).length})
+                    <span style={{ 
+                      fontSize: '0.75rem',
+                      color: '#1f2937',
+                      fontWeight: selectedFilter === 'active' ? '500' : '400',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.25rem'
+                    }}>
+                      ⚡ Active Monitoring ({filterCounts.active})
                     </span>
                   </label>
                 </div>
@@ -758,16 +1026,27 @@ const EnvironmentalMap: React.FC = () => {
                   color: '#111827',
                   margin: '0 0 0.5rem 0'
                 }}>
-                  Map Layers
+                  Map Display
                 </h3>
-                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                <label style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  cursor: 'pointer',
+                  padding: '0.25rem',
+                  borderRadius: '0.25rem'
+                }}>
                   <input
                     type="checkbox"
                     checked={showCounties}
                     onChange={(e) => setShowCounties(e.target.checked)}
                     style={{ marginRight: '0.5rem' }}
                   />
-                  <span style={{ fontSize: '0.75rem' }}>Show Counties</span>
+                  <span style={{ 
+                    fontSize: '0.75rem',
+                    color: '#1f2937'
+                  }}>
+                    Show County Boundaries
+                  </span>
                 </label>
               </div>
 
@@ -783,7 +1062,7 @@ const EnvironmentalMap: React.FC = () => {
                   color: '#111827',
                   margin: '0 0 0.5rem 0'
                 }}>
-                  Risk Levels
+                  Risk Level Legend
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
                   {Object.values(RISK_LEVELS).map((level) => (
@@ -810,6 +1089,13 @@ const EnvironmentalMap: React.FC = () => {
                         }}>
                           {level.label}
                         </p>
+                        <p style={{
+                          fontSize: '0.625rem',
+                          color: '#6b7280',
+                          margin: 0
+                        }}>
+                          {level.description}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -828,7 +1114,7 @@ const EnvironmentalMap: React.FC = () => {
                   color: '#111827',
                   margin: '0 0 0.5rem 0'
                 }}>
-                  Top Counties
+                  Counties by Risk Level
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   {countyStats.slice(0, 4).map((county) => {
@@ -875,7 +1161,7 @@ const EnvironmentalMap: React.FC = () => {
                           color: '#4b5563',
                           margin: 0
                         }}>
-                          {county.stations} stations
+                          {county.stations} monitoring stations
                         </p>
                       </div>
                     );
@@ -886,14 +1172,14 @@ const EnvironmentalMap: React.FC = () => {
           )}
         </div>
 
-        {/* Map Container - FIXED: Now takes remaining space */}
-        <div className="map-container" style={{ 
+        {/* Map Container */}
+        <div style={{ 
           flex: 1, 
           position: 'relative', 
           minWidth: 0,
           height: '100%',
           overflow: 'hidden',
-          width: 'auto'  // FIXED: Let it take remaining space
+          width: 'auto'
         }}>
           <MapContainer
             center={[47.3, -121.5]}
@@ -933,7 +1219,7 @@ const EnvironmentalMap: React.FC = () => {
                         <span style={{ fontWeight: '500' }}>{county.properties.fips_code}</span>
                       </p>
                       <p style={{ margin: 0 }}>
-                        <span style={{ color: '#4b5563' }}>Stations:</span>{' '}
+                        <span style={{ color: '#4b5563' }}>Air Stations:</span>{' '}
                         <span style={{ fontWeight: '500' }}>
                           {data.stations.filter(s => s.properties.county === county.properties.name).length}
                         </span>
@@ -955,7 +1241,7 @@ const EnvironmentalMap: React.FC = () => {
                   icon={createStationIcon(station)}
                 >
                   <Popup>
-                    <div style={{ padding: '1rem', minWidth: '280px' }}>
+                    <div style={{ padding: '1rem', minWidth: '300px' }}>
                       <div style={{
                         borderBottom: '1px solid #e5e7eb',
                         paddingBottom: '0.75rem',
@@ -975,7 +1261,7 @@ const EnvironmentalMap: React.FC = () => {
                           fontFamily: 'monospace',
                           margin: 0
                         }}>
-                          ID: {station.properties.station_id}
+                          EPA ID: {station.properties.station_id}
                         </p>
                       </div>
                       
@@ -1069,7 +1355,7 @@ const EnvironmentalMap: React.FC = () => {
                             fontWeight: '500',
                             color: getRiskColor(riskScore.risk_score)
                           }}>
-                            {getRiskLevelText(riskScore.risk_score)} Risk Level
+                            {getRiskLevel(riskScore.risk_score).label}
                           </div>
                           <div style={{
                             fontSize: '0.75rem',
@@ -1077,6 +1363,14 @@ const EnvironmentalMap: React.FC = () => {
                             marginTop: '0.25rem'
                           }}>
                             Category: {riskScore.risk_category.replace('_', ' ')}
+                          </div>
+                          <div style={{
+                            fontSize: '0.625rem',
+                            color: '#6b7280',
+                            marginTop: '0.5rem',
+                            fontStyle: 'italic'
+                          }}>
+                            Based on EPA health standards for {station.properties.parameter_name}
                           </div>
                         </div>
                       )}
@@ -1111,7 +1405,7 @@ const EnvironmentalMap: React.FC = () => {
                   fontWeight: '600',
                   margin: 0
                 }}>
-                  About This Platform
+                  About Air Quality Data
                 </h3>
                 <button
                   onClick={() => setShowInfo(false)}
@@ -1135,8 +1429,8 @@ const EnvironmentalMap: React.FC = () => {
                 color: '#374151'
               }}>
                 <p style={{ margin: 0 }}>
-                  This platform integrates real-time environmental data from EPA monitoring stations
-                  across Washington State to provide comprehensive risk assessments.
+                  This platform displays real-time air quality data from EPA monitoring stations 
+                  across Washington State. Risk scores are calculated using EPA health-based standards.
                 </p>
                 <div>
                   <h4 style={{
@@ -1156,9 +1450,9 @@ const EnvironmentalMap: React.FC = () => {
                     flexDirection: 'column',
                     gap: '0.25rem'
                   }}>
-                    <li>EPA Air Quality System (AQS) API</li>
-                    <li>US Census Bureau TIGER/Line Shapefiles</li>
-                    <li>Real-time monitoring station feeds</li>
+                    <li>EPA Air Quality System (AQS) - Real-time monitoring data</li>
+                    <li>National Ambient Air Quality Standards (NAAQS)</li>
+                    <li>Washington State Department of Ecology</li>
                   </ul>
                 </div>
                 <div>
@@ -1173,8 +1467,26 @@ const EnvironmentalMap: React.FC = () => {
                     fontSize: '0.75rem',
                     margin: 0
                   }}>
-                    Risk scores are calculated using EPA health-based standards with spatial
-                    statistical analysis including hotspot detection and trend analysis.
+                    Risk scores (0-100) are calculated by comparing measured pollutant concentrations 
+                    to EPA health standards. Higher scores indicate greater health risks.
+                  </p>
+                </div>
+                <div>
+                  <h4 style={{
+                    fontWeight: '500',
+                    marginBottom: '0.25rem',
+                    margin: 0
+                  }}>
+                    Health Impact:
+                  </h4>
+                  <p style={{
+                    fontSize: '0.75rem',
+                    margin: 0
+                  }}>
+                    • 0-25: Safe for all populations<br/>
+                    • 25-50: Sensitive individuals should be cautious<br/>
+                    • 50-75: Unhealthy for sensitive groups<br/>
+                    • 75+: Unhealthy for everyone
                   </p>
                 </div>
                 <div>
@@ -1189,8 +1501,22 @@ const EnvironmentalMap: React.FC = () => {
                     fontSize: '0.75rem',
                     margin: 0
                   }}>
-                    Data is updated hourly from EPA monitoring networks.
+                    Data is updated every 6 hours from EPA monitoring networks. 
+                    Risk assessments are recalculated with each update.
                   </p>
+                </div>
+                <div style={{
+                  backgroundColor: '#fef3c7',
+                  padding: '0.75rem',
+                  borderRadius: '0.375rem',
+                  fontSize: '0.75rem',
+                  color: '#92400e'
+                }}>
+                  <strong>📊 How to Use:</strong><br/>
+                  • Click station markers for detailed information<br/>
+                  • Use filters to focus on specific risk levels<br/>
+                  • View EPA standards table for technical details<br/>
+                  • Monitor trends over time for health planning
                 </div>
               </div>
             </div>

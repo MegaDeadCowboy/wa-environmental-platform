@@ -1,0 +1,290 @@
+/* src/components/ui/ErrorMessage.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  margin: 1rem;
+  border-radius: 8px;
+  border: 2px solid #fecaca;
+  background-color: #fef2f2;
+  min-height: 150px;
+}
+
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  width: 100%;
+  max-width: 500px;
+}
+
+.icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.messageContainer {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  margin: 0 0 0.5rem 0;
+  color: #dc2626;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.message {
+  margin: 0 0 1rem 0;
+  color: #7f1d1d;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.details {
+  margin-top: 1rem;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.detailsToggle {
+  padding: 0.5rem 0.75rem;
+  background-color: #fef2f2;
+  color: #991b1b;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.detailsToggle:hover {
+  background-color: #fecaca;
+}
+
+.errorStack {
+  padding: 0.75rem;
+  background-color: #fff;
+  color: #374151;
+  font-size: 0.625rem;
+  font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 0;
+  border-top: 1px solid #fca5a5;
+}
+
+.actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.retryButton {
+  padding: 0.5rem 1rem;
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.retryButton:hover {
+  background-color: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.retryButton:active {
+  transform: translateY(0);
+}
+
+.retryButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
+}
+
+/* Size variants */
+.small {
+  padding: 1rem;
+  min-height: 100px;
+}
+
+.small .icon {
+  font-size: 1.5rem;
+}
+
+.small .title {
+  font-size: 1rem;
+}
+
+.small .message {
+  font-size: 0.8125rem;
+}
+
+.large {
+  padding: 3rem;
+  min-height: 250px;
+}
+
+.large .icon {
+  font-size: 2.5rem;
+}
+
+.large .title {
+  font-size: 1.25rem;
+}
+
+.large .message {
+  font-size: 1rem;
+}
+
+/* Theme variants */
+.air {
+  border-color: #fcd34d;
+  background-color: #fffbeb;
+}
+
+.air .title {
+  color: #d97706;
+}
+
+.air .message {
+  color: #92400e;
+}
+
+.air .details {
+  border-color: #fde68a;
+}
+
+.air .detailsToggle {
+  background-color: #fffbeb;
+  color: #a16207;
+}
+
+.air .detailsToggle:hover {
+  background-color: #fef3c7;
+}
+
+.air .retryButton {
+  background-color: #d97706;
+}
+
+.air .retryButton:hover {
+  background-color: #b45309;
+}
+
+.water {
+  border-color: #93c5fd;
+  background-color: #eff6ff;
+}
+
+.water .title {
+  color: #2563eb;
+}
+
+.water .message {
+  color: #1e40af;
+}
+
+.water .details {
+  border-color: #bfdbfe;
+}
+
+.water .detailsToggle {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.water .detailsToggle:hover {
+  background-color: #dbeafe;
+}
+
+.water .retryButton {
+  background-color: #2563eb;
+}
+
+.water .retryButton:hover {
+  background-color: #1d4ed8;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .container {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .icon {
+    align-self: center;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: #450a0a;
+    border-color: #991b1b;
+  }
+  
+  .title {
+    color: #fca5a5;
+  }
+  
+  .message {
+    color: #fecaca;
+  }
+  
+  .errorStack {
+    background-color: #1f1f1f;
+    color: #e5e5e5;
+  }
+  
+  .air {
+    background-color: #451a03;
+    border-color: #a16207;
+  }
+  
+  .air .title {
+    color: #fbbf24;
+  }
+  
+  .air .message {
+    color: #fde68a;
+  }
+  
+  .water {
+    background-color: #1e3a8a;
+    border-color: #3730a3;
+  }
+  
+  .water .title {
+    color: #93c5fd;
+  }
+  
+  .water .message {
+    color: #bfdbfe;
+  }
+}

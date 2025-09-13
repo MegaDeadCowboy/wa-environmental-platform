@@ -1,0 +1,367 @@
+/* src/components/ui/AlertBadge.module.css */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.clickable:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  font-size: 0.875rem;
+  line-height: 1;
+  display: inline-block;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.label {
+  font-weight: inherit;
+}
+
+.value {
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* Size variants */
+.small {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  gap: 0.25rem;
+}
+
+.small .icon {
+  font-size: 0.75rem;
+}
+
+.large {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  gap: 0.5rem;
+}
+
+.large .icon {
+  font-size: 1rem;
+}
+
+/* Status colors - Filled variant */
+.filled.good {
+  background-color: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.filled.moderate {
+  background-color: #fef3c7;
+  color: #92400e;
+  border-color: #fde68a;
+}
+
+.filled.unhealthy {
+  background-color: #fed7aa;
+  color: #9a3412;
+  border-color: #fdba74;
+}
+
+.filled.dangerous {
+  background-color: #fecaca;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+
+.filled.critical {
+  background-color: #fce7f3;
+  color: #831843;
+  border-color: #f9a8d4;
+}
+
+.filled.unknown {
+  background-color: #f3f4f6;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+/* Status colors - Outline variant */
+.outline.good {
+  background-color: transparent;
+  color: #166534;
+  border-color: #22c55e;
+}
+
+.outline.moderate {
+  background-color: transparent;
+  color: #92400e;
+  border-color: #f59e0b;
+}
+
+.outline.unhealthy {
+  background-color: transparent;
+  color: #9a3412;
+  border-color: #f97316;
+}
+
+.outline.dangerous {
+  background-color: transparent;
+  color: #991b1b;
+  border-color: #ef4444;
+}
+
+.outline.critical {
+  background-color: transparent;
+  color: #831843;
+  border-color: #ec4899;
+}
+
+.outline.unknown {
+  background-color: transparent;
+  color: #374151;
+  border-color: #6b7280;
+}
+
+/* Status colors - Subtle variant */
+.subtle.good {
+  background-color: #f0fdf4;
+  color: #15803d;
+  border-color: transparent;
+}
+
+.subtle.moderate {
+  background-color: #fffbeb;
+  color: #a16207;
+  border-color: transparent;
+}
+
+.subtle.unhealthy {
+  background-color: #fff7ed;
+  color: #c2410c;
+  border-color: transparent;
+}
+
+.subtle.dangerous {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border-color: transparent;
+}
+
+.subtle.critical {
+  background-color: #fdf2f8;
+  color: #be185d;
+  border-color: transparent;
+}
+
+.subtle.unknown {
+  background-color: #f9fafb;
+  color: #4b5563;
+  border-color: transparent;
+}
+
+/* Hover states for clickable badges */
+.clickable.filled.good:hover {
+  background-color: #bbf7d0;
+}
+
+.clickable.filled.moderate:hover {
+  background-color: #fde68a;
+}
+
+.clickable.filled.unhealthy:hover {
+  background-color: #fdba74;
+}
+
+.clickable.filled.dangerous:hover {
+  background-color: #fca5a5;
+}
+
+.clickable.filled.critical:hover {
+  background-color: #f9a8d4;
+}
+
+.clickable.filled.unknown:hover {
+  background-color: #e5e7eb;
+}
+
+.clickable.outline.good:hover {
+  background-color: #f0fdf4;
+}
+
+.clickable.outline.moderate:hover {
+  background-color: #fffbeb;
+}
+
+.clickable.outline.unhealthy:hover {
+  background-color: #fff7ed;
+}
+
+.clickable.outline.dangerous:hover {
+  background-color: #fef2f2;
+}
+
+.clickable.outline.critical:hover {
+  background-color: #fdf2f8;
+}
+
+.clickable.outline.unknown:hover {
+  background-color: #f9fafb;
+}
+
+/* Focus states */
+.clickable.good:focus {
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
+}
+
+.clickable.moderate:focus {
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+}
+
+.clickable.unhealthy:focus {
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.3);
+}
+
+.clickable.dangerous:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
+}
+
+.clickable.critical:focus {
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.3);
+}
+
+.clickable.unknown:focus {
+  box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .badge {
+    font-size: 0.8125rem;
+    padding: 0.1875rem 0.625rem;
+  }
+  
+  .large {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.875rem;
+  }
+  
+  .icon {
+    font-size: 0.75rem;
+  }
+  
+  .large .icon {
+    font-size: 0.875rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .filled.good {
+    background-color: #14532d;
+    color: #bbf7d0;
+    border-color: #166534;
+  }
+  
+  .filled.moderate {
+    background-color: #451a03;
+    color: #fde68a;
+    border-color: #92400e;
+  }
+  
+  .filled.unhealthy {
+    background-color: #431407;
+    color: #fdba74;
+    border-color: #9a3412;
+  }
+  
+  .filled.dangerous {
+    background-color: #450a0a;
+    color: #fca5a5;
+    border-color: #991b1b;
+  }
+  
+  .filled.critical {
+    background-color: #500724;
+    color: #f9a8d4;
+    border-color: #831843;
+  }
+  
+  .filled.unknown {
+    background-color: #1f2937;
+    color: #d1d5db;
+    border-color: #374151;
+  }
+  
+  .subtle.good {
+    background-color: #052e16;
+    color: #86efac;
+  }
+  
+  .subtle.moderate {
+    background-color: #1c1917;
+    color: #fbbf24;
+  }
+  
+  .subtle.unhealthy {
+    background-color: #1c2917;
+    color: #fb923c;
+  }
+  
+  .subtle.dangerous {
+    background-color: #1f1315;
+    color: #f87171;
+  }
+  
+  .subtle.critical {
+    background-color: #1f0a18;
+    color: #f472b6;
+  }
+  
+  .subtle.unknown {
+    background-color: #111827;
+    color: #9ca3af;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .badge,
+  .clickable:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .badge {
+    border-width: 2px;
+    font-weight: 700;
+  }
+  
+  .outline {
+    border-width: 2px;
+  }
+}
